@@ -1,16 +1,10 @@
 package entities;
 
-public class User {
+public class User extends Entity{
     private int id;
     private String telefono;
     private String alias;
     private boolean administrador;
-
-    public User(String telephone, String alias, boolean administrador) {
-        this.telefono = telefono;
-        this.alias = alias;
-        this.administrador = administrador;
-    }
 
     public User(int id, String telefono, String alias, boolean administrador) {
         this.id = id;
@@ -27,11 +21,19 @@ public class User {
         this.id = id;
     }
 
-    public String getTelephone() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelephone(String telefono) {
+    public boolean getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(boolean administrador) {
+        this.administrador = administrador;
+    }
+
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 

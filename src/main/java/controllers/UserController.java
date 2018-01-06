@@ -12,17 +12,22 @@ public class UserController {
         );
 
         get("/users", (req, res) ->
-                req.queryParams("telephone") != null ? userService.getUserByTelephone(req.queryParams("telephone")) :
+                req.queryParams("telefono") != null ? userService.getUserByTelephone(req.queryParams("telefono")) :
                         req.queryParams("alias") != null ? userService.getUserByAlias(req.queryParams("alias")) :
                                 userService.getUsers(), json()
         );
 
-        post("/users", (req, res) ->
-                userService.createUser(req.queryParams("telephone"), req.queryParams("alias")), json()
+        get("/users/:id/favorites", (req, res) ->
+                userService.getFavoriteSaves(req.params("id")), json()
         );
 
-        after((req, res) -> {
-            res.type("application/json");
-        });
+        post("/users", (req, res) ->
+                userService.createUser(req.queryParams("telefono"), req.queryParams("alias")), json()
+        );
+
+        get("/users/:id/saves", (req, res) ->
+                userService.getSaves(req.params("id")), json()
+        );
     }
+
 }

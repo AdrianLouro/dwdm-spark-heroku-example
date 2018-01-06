@@ -1,6 +1,5 @@
-import controllers.UserController;
-import org.sql2o.Sql2o;
-import services.UserService;
+import controllers.*;
+import services.*;
 
 import static spark.Spark.before;
 import static spark.Spark.options;
@@ -12,6 +11,11 @@ public class Main {
         port(getHerokuAssignedPort());
         enableCORS();
         new UserController(new UserService());
+        new CompanyController(new CompanyService());
+        new CategoryController(new CategoryService());
+        new SaveController(new SaveService());
+        new FavoriteController(new FavoriteService());
+        new ReactionController(new ReactionService());
     }
 
     private static void enableCORS() {
@@ -35,7 +39,6 @@ public class Main {
             response.header("Access-Control-Allow-Origin", "*");
             response.header("Access-Control-Request-Methods", "GET,PUT,POST,DELETE,OPTIONS");
             response.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
-            // Note: this may or may not be necessary in your particular application
             response.type("application/json");
         });
     }

@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="dwdm-new-spark-project" />
         <module name="new-spark-project" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="dwdm-new-spark-project" target="1.8" />
       <module name="new-spark-project" target="1.8" />
     </bytecodeTargetLevel>
   </component>

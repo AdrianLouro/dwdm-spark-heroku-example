@@ -1,20 +1,22 @@
 package entities;
 
-
 public class User {
     private int id;
-    private String telephone;
+    private String telefono;
     private String alias;
+    private boolean administrador;
 
-    public User( String telephone, String alias) {
-        this.telephone = telephone;
+    public User(String telephone, String alias, boolean administrador) {
+        this.telefono = telefono;
         this.alias = alias;
+        this.administrador = administrador;
     }
 
-    public User(int id, String telephone, String alias) {
+    public User(int id, String telefono, String alias, boolean administrador) {
         this.id = id;
-        this.telephone = telephone;
+        this.telefono = telefono;
         this.alias = alias;
+        this.administrador = administrador;
     }
 
     public int getId() {
@@ -26,11 +28,11 @@ public class User {
     }
 
     public String getTelephone() {
-        return telephone;
+        return telefono;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setTelephone(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getAlias() {

@@ -1,25 +1,44 @@
 package services;
 
 import entities.User;
+import facades.DAO;
+
+import java.util.List;
 
 public class UserService {
     public User getUser(String id){
-        return new User(1,"12345","juan");
+        List<User> users = DAO.getInstance().getConnection().createQuery("SELECT * FROM usuario WHERE id=:id;")
+                .addParameter("id", Integer.parseInt(id))
+                .executeAndFetch(User.class);
+        return users.isEmpty() ? null : users.get(0);
     }
 
-    public User getUsers(){
-        return new User(2,"12345","juan");
+    public List<User> getUsers(){
+        return DAO.getInstance().getConnection().createQuery("SELECT * FROM usuario;")
+                .executeAndFetch(User.class);
     }
 
     public User getUserByTelephone(String telephone){
-        return new User(3,telephone,"juan");
+        List<User> users = DAO.getInstance().getConnection().createQuery("SELECT * FROM usuario WHERE telefono=:telefono;")
+                .addParameter("telefono", telephone)
+                .executeAndFetch(User.class);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     public User getUserByAlias(String alias){
-        return new User(4,"123",alias);
+        List<User> users = DAO.getInstance().getConnection().createQuery("SELECT * FROM usuario WHERE alias=:alias;")
+                .addParameter("alias", alias)
+                .executeAndFetch(User.class);
+        return users.isEmpty() ? null : users.get(0);
     }
 
-    public User createUser(String id, String telephone, String alias){
-        return new User(Integer.parseInt(id), telephone, alias);
+    public User createUser(String telephone, String alias){
+        if(getUserByAlias(alias) != null || getUserByTelephone(telephone) != null) return null;
+        Object id = DAO.getInstance().getConnection().createQuery("INSERT INTO usuario (telefono,alias,administrador) VALUES (:telefono,:alias,false);", true)
+                .addParameter("alias", alias)
+                .addParameter("telefono", telephone)
+                .executeUpdate()
+                .getKey();
+        return new User((Integer) id, telephone, alias, false);
     }
 }

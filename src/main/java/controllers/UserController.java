@@ -17,6 +17,9 @@ public class UserController {
                                 userService.getUsers(), json()
         );
 
+        post("/users", (req, res) ->
+                userService.createUser(req.queryParams("telephone"), req.queryParams("alias")), json()
+        );
 
         after((req, res) -> {
             res.type("application/json");

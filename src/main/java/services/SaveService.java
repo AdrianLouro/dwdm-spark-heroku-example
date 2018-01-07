@@ -5,6 +5,7 @@ import facades.DAO;
 import org.sql2o.ResultSetHandler;
 import spark.Request;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class SaveService {
                 );
     }
 
-    public boolean createSave(String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String usuario, String categoria) {
+    public boolean createSave(String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String usuario, String categoria, Request req) {
         DAO.getInstance().getConnection().createQuery("INSERT INTO chollo (titulo,enlace,descripcion,precioAntes,precioDespues,fechaCreacion,fechaActualizacion,empresaNoPatrocinada,empresaPatrocinada,usuario,categoria)" +
                 " VALUES (:titulo,:enlace,:descripcion,:precioAntes,:precioDespues,:fechaCreacion,:fechaActualizacion,:empresaNoPatrocinada,:empresaPatrocinada,:usuario,:categoria);")
                 .addParameter("titulo", titulo)
@@ -68,7 +69,7 @@ public class SaveService {
         return true;
     }
 
-    public boolean editSave(String id, String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String categoria) {
+    public boolean editSave(String id, String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String categoria, Request req) {
         DAO.getInstance().getConnection().createQuery("UPDATE chollo SET titulo=:titulo,enlace=:enlace,descripcion=:descripcion,precioAntes=:precioAntes,precioDespues=:precioDespues,fechaActualizacion=:fechaActualizacion,empresaNoPatrocinada=:empresaNoPatrocinada,empresaPatrocinada=:empresaPatrocinada,categoria=:categoria WHERE id=:id;")
                 .addParameter("id", Integer.parseInt((id)))
                 .addParameter("titulo", titulo)
@@ -84,14 +85,14 @@ public class SaveService {
         return true;
     }
 
-    public boolean deleteSave(String id) {
+    public boolean deleteSave(String id, Request req) {
         DAO.getInstance().getConnection().createQuery("DELETE from chollo WHERE id=:id;")
                 .addParameter("id", Integer.parseInt((id)))
                 .executeUpdate();
         return true;
     }
 
-    public int getReactionsCountFor(String id, String positiva) {
+    public int getReactionsCount(String id, String positiva) {
         return DAO.getInstance().getConnection().createQuery("SELECT COUNT(*)\n" +
                 "FROM (reaccion\n" +
                 "INNER JOIN chollo ON reaccion.chollo = chollo.id)\n" +
@@ -100,5 +101,15 @@ public class SaveService {
                 .addParameter("id", Integer.parseInt((id)))
                 .addParameter("positiva", Boolean.valueOf((positiva)))
                 .executeScalar(Integer.class);
+    }
+
+    public List<Save> getPopulars() {
+        List<Save> saves = getSaves();
+        Collections.sort(saves,
+                (save2, save1) ->
+                        (getReactionsCount(save1.getId() + "", "true") - getReactionsCount(save1.getId() + "", "false")) -
+                                (getReactionsCount(save2.getId() + "", "true") - getReactionsCount(save2.getId() + "", "false"))
+        );
+        return saves;
     }
 }

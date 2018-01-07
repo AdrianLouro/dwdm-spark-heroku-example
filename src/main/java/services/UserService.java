@@ -1,9 +1,12 @@
 package services;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import entities.Save;
 import entities.User;
 import facades.DAO;
 import org.sql2o.ResultSetHandler;
+import spark.Request;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +35,11 @@ public class UserService {
                 .executeAndFetchFirst(User.class);
     }
 
-    public User createUser(String telephone, String alias) {
+    public User createUser(String telephone, String alias, Request req) {
+        JsonObject jsonObject = new Gson().fromJson(req.body(), JsonObject.class);
+        telephone = jsonObject.get("telefono").getAsString();
+        alias = jsonObject.get("alias").getAsString();
+
         if (getUserByAlias(alias) != null || getUserByTelephone(telephone) != null) return null;
         Object id = DAO.getInstance().getConnection().createQuery("INSERT INTO usuario (telefono,alias,administrador) VALUES (:telefono,:alias,false);", true)
                 .addParameter("alias", alias)
@@ -65,5 +72,14 @@ public class UserService {
 
     public List<Save> getFavoriteSaves(String id) {
         return new FavoriteService().getFavoritesByUser(id).stream().map((favorite) -> favorite.getSave()).collect(Collectors.toList());
+    }
+
+    public int getReactionsCount(String id, String positiva){
+        List<Save> userSaves = getSaves(id);
+        int reputation = 0;
+        for (Save save : userSaves)
+            reputation += new SaveService().getReactionsCount("" + save.getId(), positiva);
+
+        return reputation;
     }
 }

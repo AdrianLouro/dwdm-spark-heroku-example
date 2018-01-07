@@ -12,11 +12,12 @@ public class SaveController {
         );
 
         get("/saves", (req, res) ->
-                saveService.getSaves(), json()
+                req.queryParams("populars") == null ?
+                saveService.getSaves() : saveService.getPopulars(), json()
         );
 
         get("/saves/:id/reactions", (req, res) ->
-                saveService.getReactionsCountFor(req.params("id"), req.queryParams("positiva")), json()
+                saveService.getReactionsCount(req.params("id"), req.queryParams("positiva")), json()
         );
 
         post("/saves", (req, res) ->
@@ -29,7 +30,8 @@ public class SaveController {
                         req.queryParams("empresaNoPatrocinada"),
                         req.queryParams("empresaPatrocinada"),
                         req.queryParams("usuario"),
-                        req.queryParams("categoria")
+                        req.queryParams("categoria"),
+                        req
                 ), json()
         );
 
@@ -43,12 +45,13 @@ public class SaveController {
                         req.queryParams("precioDespues"),
                         req.queryParams("empresaNoPatrocinada"),
                         req.queryParams("empresaPatrocinada"),
-                        req.queryParams("categoria")
+                        req.queryParams("categoria"),
+                        req
                 ), json()
         );
 
         delete("/saves/:id", (req, res) ->
-                saveService.deleteSave(req.params("id")), json()
+                saveService.deleteSave(req.params("id"), req), json()
         );
 
     }

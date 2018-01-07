@@ -17,15 +17,15 @@ public class ReactionController {
         );
 
         post("/reactions", (req, res) ->
-                reactionService.createReaction(req.queryParams("chollo"), req.queryParams("usuario"), req.queryParams("positiva")), json()
+                reactionService.createReaction(req.queryParams("chollo"), req.queryParams("usuario"), req.queryParams("positiva"), req), json()
         );
 
         put("/reactions", (req, res) ->
-                reactionService.editReaction(req.queryParams("chollo"), req.queryParams("usuario"), req.queryParams("positiva")), json()
+                reactionService.editReaction(req.queryParams("chollo"), req.queryParams("usuario"), req.queryParams("positiva"), req), json()
         );
 
         delete("/reactions", (req, res) ->
-                reactionService.deleteReaction(req.queryParams("chollo"), req.queryParams("usuario")), json()
+                reactionService.deleteReaction(req.queryParams("chollo"), req.queryParams("usuario"), req), json()
         );
     }
 }

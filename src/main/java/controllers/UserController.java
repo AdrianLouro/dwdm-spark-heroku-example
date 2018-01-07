@@ -22,11 +22,15 @@ public class UserController {
         );
 
         post("/users", (req, res) ->
-                userService.createUser(req.queryParams("telefono"), req.queryParams("alias")), json()
+                userService.createUser(req.queryParams("telefono"), req.queryParams("alias"), req), json()
         );
 
         get("/users/:id/saves", (req, res) ->
                 userService.getSaves(req.params("id")), json()
+        );
+
+        get("/users/:id/reactions", (req, res) ->
+                userService.getReactionsCount(req.params("id"), req.queryParams("positiva")), json()
         );
     }
 

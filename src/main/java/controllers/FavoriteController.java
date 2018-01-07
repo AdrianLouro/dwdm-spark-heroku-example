@@ -15,11 +15,11 @@ public class FavoriteController {
         );
 
         post("/favorites", (req, res) ->
-                favoriteService.createFavorite(req.queryParams("chollo"), req.queryParams("usuario")), json()
+                favoriteService.createFavorite(req.queryParams("chollo"), req.queryParams("usuario"), req), json()
         );
 
         delete("/favorites", (req, res) ->
-                favoriteService.deleteFavorite(req.queryParams("chollo"), req.queryParams("usuario")), json()
+                favoriteService.deleteFavorite(req.queryParams("chollo"), req.queryParams("usuario"), req), json()
         );
     }
 }

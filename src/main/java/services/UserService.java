@@ -35,18 +35,20 @@ public class UserService {
                 .executeAndFetchFirst(User.class);
     }
 
-    public User createUser(String telephone, String alias, Request req) {
+    public User createUser(String telephone, String alias, String administrador, Request req) {
         JsonObject jsonObject = new Gson().fromJson(req.body(), JsonObject.class);
         telephone = jsonObject.get("telefono").getAsString();
         alias = jsonObject.get("alias").getAsString();
+        administrador= jsonObject.get("administrador").getAsString();
 
         if (getUserByAlias(alias) != null || getUserByTelephone(telephone) != null) return null;
-        Object id = DAO.getInstance().getConnection().createQuery("INSERT INTO usuario (telefono,alias,administrador) VALUES (:telefono,:alias,false);", true)
+        Object id = DAO.getInstance().getConnection().createQuery("INSERT INTO usuario (telefono,alias,administrador) VALUES (:telefono,:alias,:administrador);", true)
                 .addParameter("alias", alias)
                 .addParameter("telefono", telephone)
+                .addParameter("administrador", Boolean.valueOf(administrador))
                 .executeUpdate()
                 .getKey();
-        return new User((Integer) id, telephone, alias, false);
+        return new User((Integer) id, telephone, alias, Boolean.valueOf(administrador));
     }
 
     public List<Save> getSaves(String id) {

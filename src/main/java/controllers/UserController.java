@@ -22,7 +22,7 @@ public class UserController {
         );
 
         post("/users", (req, res) ->
-                userService.createUser(req.queryParams("telefono"), req.queryParams("alias"), req), json()
+                userService.createUser(req.queryParams("telefono"), req.queryParams("alias"), req.queryParams("administrador"), req), json()
         );
 
         get("/users/:id/saves", (req, res) ->

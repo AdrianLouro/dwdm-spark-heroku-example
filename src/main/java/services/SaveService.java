@@ -1,5 +1,7 @@
 package services;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import entities.Save;
 import facades.DAO;
 import org.sql2o.ResultSetHandler;
@@ -32,7 +34,7 @@ public class SaveService {
     }
 
     public List<Save> getSaves() {
-        return DAO.getInstance().getConnection().createQuery("SELECT * FROM chollo ORDER BY fechaActualizacion DESC")
+        return DAO.getInstance().getConnection().createQuery("SELECT * FROM chollo ORDER BY empresaPatrocinada DESC, fechaActualizacion DESC")
                 .executeAndFetch((ResultSetHandler<Save>) resultSet ->
                         new Save(
                                 resultSet.getInt("id"),
@@ -52,6 +54,17 @@ public class SaveService {
     }
 
     public boolean createSave(String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String usuario, String categoria, Request req) {
+        JsonObject jsonObject = new Gson().fromJson(req.body(), JsonObject.class);
+        titulo = jsonObject.get("titulo").getAsString();
+        enlace = jsonObject.get("enlace").getAsString();
+        descripcion = jsonObject.get("descripcion").getAsString();
+        precioAntes = jsonObject.get("precioAntes").getAsString();
+        precioDespues = jsonObject.get("precioDespues").getAsString();
+        empresaNoPatrocinada = jsonObject.get("empresaNoPatrocinada").getAsString();
+        empresaPatrocinada = jsonObject.get("empresaPatrocinada").getAsString();
+        usuario = jsonObject.get("usuario").getAsString();
+        categoria = jsonObject.get("categoria").getAsString();
+
         DAO.getInstance().getConnection().createQuery("INSERT INTO chollo (titulo,enlace,descripcion,precioAntes,precioDespues,fechaCreacion,fechaActualizacion,empresaNoPatrocinada,empresaPatrocinada,usuario,categoria)" +
                 " VALUES (:titulo,:enlace,:descripcion,:precioAntes,:precioDespues,:fechaCreacion,:fechaActualizacion,:empresaNoPatrocinada,:empresaPatrocinada,:usuario,:categoria);")
                 .addParameter("titulo", titulo)
@@ -70,6 +83,16 @@ public class SaveService {
     }
 
     public boolean editSave(String id, String titulo, String enlace, String descripcion, String precioAntes, String precioDespues, String empresaNoPatrocinada, String empresaPatrocinada, String categoria, Request req) {
+        JsonObject jsonObject = new Gson().fromJson(req.body(), JsonObject.class);
+        titulo = jsonObject.get("titulo").getAsString();
+        enlace = jsonObject.get("enlace").getAsString();
+        descripcion = jsonObject.get("descripcion").getAsString();
+        precioAntes = jsonObject.get("precioAntes").getAsString();
+        precioDespues = jsonObject.get("precioDespues").getAsString();
+        empresaNoPatrocinada = jsonObject.get("empresaNoPatrocinada").getAsString();
+        empresaPatrocinada = jsonObject.get("empresaPatrocinada").getAsString();
+        categoria = jsonObject.get("categoria").getAsString();
+
         DAO.getInstance().getConnection().createQuery("UPDATE chollo SET titulo=:titulo,enlace=:enlace,descripcion=:descripcion,precioAntes=:precioAntes,precioDespues=:precioDespues,fechaActualizacion=:fechaActualizacion,empresaNoPatrocinada=:empresaNoPatrocinada,empresaPatrocinada=:empresaPatrocinada,categoria=:categoria WHERE id=:id;")
                 .addParameter("id", Integer.parseInt((id)))
                 .addParameter("titulo", titulo)
